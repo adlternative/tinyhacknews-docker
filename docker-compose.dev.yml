@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  backend:
+    image: adlternative/tinyhacknews:0.0.1.beta
+    container_name: tinyhacknews
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - SPRING_REDIS_HOST=${SPRING_REDIS_HOST}
+      - SPRING_REDIS_PORT=${SPRING_REDIS_PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - PROJECT_DIR=${PROJECT_DIR}
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - app-network
+
+  frontend:
+    image: adlternative/tinyhacknews-frontend:0.0.1.beta
+    container_name: tinyhacknews-frontend
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app-network
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_DATABASE: ${SPRING_DATASOURCE_DATABASE}
+      MYSQL_USER: ${SPRING_DATASOURCE_USERNAME}
+      MYSQL_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  redis_data:
