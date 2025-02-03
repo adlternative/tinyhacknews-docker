@@ -2,14 +2,20 @@
 
 used for start tinyhacknews WEB.
 
-### build
+### build + start
 
 ```sh
-docker-compose --env-file .env.dev -f docker-compose.dev.yml up --build  -d
+docker-compose --env-file .env up --build  -d
+```
+
+### start
+
+```sh
+docker-compose --env-file .env start
 ```
 
 ### stop
 
 ```sh
-docker-compose --env-file .env.dev -f docker-compose.dev.yml down
+docker-compose --env-file .env stop
 ```
