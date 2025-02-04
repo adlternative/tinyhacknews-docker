@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   backend:
-    image: crpi-4386o6msh07w1tzf.cn-hangzhou.personal.cr.aliyuncs.com/adlternative/tinyhacknews:0.0.1.beta
+    image: crpi-4386o6msh07w1tzf.cn-hangzhou.personal.cr.aliyuncs.com/adlternative/tinyhacknews:0.0.1
     container_name: tinyhacknews
     ports:
       - "8080:8080"
